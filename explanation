@@ -1,22 +1,28 @@
 Imports
+
 import java.io.*;
 Imports classes for input/output operations.
 You specifically use PrintWriter from here to send response data to the browser.
+
 import javax.servlet.*;
 Gives access to core servlet classes like:
+
 ServletException
 RequestDispatcher (not used here, but should be)
+
 import javax.servlet.http.*;
 Required for HTTP-specific servlet handling.
 Provides:
 HttpServlet
 HttpServletRequest
 HttpServletResponse
+
 Class Declaration
 public class CalcServlet extends HttpServlet {
 You are creating a servlet named CalcServlet.
 It extends HttpServlet, meaning:
 It can handle HTTP requests (GET, POST, etc.)
+
 doPost Method
 @Override
 protected void doPost(HttpServletRequest req, HttpServletResponse res)
@@ -24,19 +30,23 @@ protected void doPost(HttpServletRequest req, HttpServletResponse res)
 This method runs when a POST request is sent to the servlet.
 req → contains client data (form inputs)
 res → used to send response back
+
 Setting Response Type
 res.setContentType("text/html");
 Tells browser: “I’m sending HTML content.”
 Without this, browser may misinterpret output.
+
 Getting Output Stream
 PrintWriter out = res.getWriter();
 Creates a writer to send text back to the client.
 Everything you out.println() becomes part of the webpage.
 Getting Form Parameters
+
 String num1Str = req.getParameter("num1");
 String num2Str = req.getParameter("num2");
 String op = req.getParameter("operation");
 Reads values sent from HTML form.
+
 These are always strings, even if user enters numbers.
 "num1", "num2", "operation" must match form field names.
 Null Check
@@ -44,26 +54,28 @@ if (num1Str == null || num2Str == null || op == null) {
     out.println("<h3>Error: Missing input values!</h3>");
     return;
 }
+
 Checks if any input is missing.
 If missing:
 prints error
 return; stops further execution
 
-Blind spot:
-
-You didn’t check empty strings ("") → still breaks logic later.
 Try Block (Parsing & Logic)
 try {
 Used to catch invalid number formats.
+
 Converting Strings to Integers
 int num1 = Integer.parseInt(num1Str);
 int num2 = Integer.parseInt(num2Str);
+
 Converts input strings into integers.
 If user enters "abc" → throws NumberFormatException.
+
 Result Variable
 int result = 0;
 Stores calculation result.
 Initialized to avoid compile error.
+
 Switch Case (Core Logic)
 switch (op) {
 Chooses operation based on input.
@@ -88,22 +100,22 @@ If divisor is zero:
 print error
 stop execution
 
-Blind spot:
-
-Integer division → cuts decimals (5/2 = 2)
 Default Case
 default:
     out.println("<h3>Error: Invalid operation!</h3>");
     return;
 Handles unexpected operation input.
+
 Display Result
 out.println("<h2>Result: " + result + "</h2>");
 Sends result as HTML to browser.
+
 Catch Block
 } catch (NumberFormatException e) {
 Runs if conversion fails (invalid number input)
 out.println("<h3>Error: Please enter valid numbers!</h3>");
 Displays error message
+
 Closing Braces
 }
 }
